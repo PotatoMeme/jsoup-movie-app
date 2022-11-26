@@ -1,6 +1,7 @@
 package com.potatomeme.jsoupmovieapp.ui.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,10 +32,15 @@ class StartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.starFragment = this
         viewModel = (activity as MainActivity).viewModel
+
+        viewModel.tierList.observe(viewLifecycleOwner){
+            Log.d(TAG, "tierList changed ${it}")
+        }
     }
 
     fun btn1Click() {
         Toast.makeText(context, "btn1 Clicked", Toast.LENGTH_LONG).show()
+        viewModel.searchTier()
     }
 
     fun btn2Click() {
