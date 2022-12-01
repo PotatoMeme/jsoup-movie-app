@@ -34,21 +34,20 @@ class StartFragment : Fragment() {
         binding.starFragment = this
         viewModel = (activity as MainActivity).viewModel
 
-//        viewModel.tierList.observe(viewLifecycleOwner){
-//            Log.d(TAG, "tierList changed ${it}")
-//        }
     }
 
     fun btn1Click() {
         Toast.makeText(context, "btn1 Clicked", Toast.LENGTH_LONG).show()
         val action = StartFragmentDirections.actionFragmentStartToFragmentTier()
         findNavController().navigate(action)
-
-        //viewModel.searchTier()
     }
 
     fun btn2Click() {
         Toast.makeText(context, "btn2 Clicked", Toast.LENGTH_LONG).show()
+    }
+
+    fun btn3Click() {
+        Toast.makeText(context, "btn3 Clicked", Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {

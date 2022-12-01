@@ -61,6 +61,7 @@ class TierFragment : Fragment() {
             tierListAdapter.setOnItemClickListener( object :TIerListAdapter.OnItemClickListener{
                 override fun onItemClick(v: View, movieTier: MovieTier, pos: Int) {
                     Toast.makeText(context,movieTier.toString(),Toast.LENGTH_LONG).show()
+                    viewModel.searchMovie(movieTier.url)
                 }
             })
 
