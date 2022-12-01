@@ -11,8 +11,9 @@ data class Movie(
     val runningTime: String,
     val openingPeriod: String,
     val director: String,
+    val actor: String,
     val rating: String,//ex) 15금
     val imgUrl: String,
-    val summary: String
+    val summary: String,
 ) {
 }
