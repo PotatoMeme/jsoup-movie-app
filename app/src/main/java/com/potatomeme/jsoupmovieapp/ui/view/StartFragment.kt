@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.potatomeme.jsoupmovieapp.R
 import com.potatomeme.jsoupmovieapp.databinding.FragmentStartBinding
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
@@ -33,14 +34,17 @@ class StartFragment : Fragment() {
         binding.starFragment = this
         viewModel = (activity as MainActivity).viewModel
 
-        viewModel.tierList.observe(viewLifecycleOwner){
-            Log.d(TAG, "tierList changed ${it}")
-        }
+//        viewModel.tierList.observe(viewLifecycleOwner){
+//            Log.d(TAG, "tierList changed ${it}")
+//        }
     }
 
     fun btn1Click() {
         Toast.makeText(context, "btn1 Clicked", Toast.LENGTH_LONG).show()
-        viewModel.searchTier()
+        val action = StartFragmentDirections.actionFragmentStartToFragmentTier()
+        findNavController().navigate(action)
+
+        //viewModel.searchTier()
     }
 
     fun btn2Click() {

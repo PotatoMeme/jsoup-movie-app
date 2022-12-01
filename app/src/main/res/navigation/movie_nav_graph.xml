@@ -8,5 +8,17 @@
     <fragment
         android:id="@+id/fragment_start"
         android:name="com.potatomeme.jsoupmovieapp.ui.view.StartFragment"
-        android:label="StartFragment" />
+        android:label="StartFragment" >
+        <action
+            android:id="@+id/action_fragment_start_to_fragment_tier"
+            app:destination="@id/fragment_tier"
+            app:enterAnim="@anim/slide_to_left_enter"
+            app:exitAnim="@anim/slide_to_left_exit"
+            app:popEnterAnim="@anim/slide_to_right_enter"
+            app:popExitAnim="@anim/slide_to_right_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_tier"
+        android:name="com.potatomeme.jsoupmovieapp.ui.view.TierFragment"
+        android:label="TierFragment" />
 </navigation>
