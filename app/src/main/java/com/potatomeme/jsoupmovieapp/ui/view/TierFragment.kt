@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -38,11 +40,28 @@ class TierFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.tierFragment = this
         viewModel = (activity as MainActivity).viewModel
-        viewModel.searchTier()
+        viewModel.searchTier(0)
+        setupSpinner()
         setupRecyclerView()
         viewModel.tierList.observe(viewLifecycleOwner){
             Log.d(TAG, "tierList changed ${it}")
             tierListAdapter.submitList(it)
+        }
+    }
+
+    private fun setupSpinner() {
+        val sort_list = listOf("실시간 조회순", "평정순(현재 상영영화)", "평점순(모든영화)")
+        val adapter_spinner =
+            ArrayAdapter(context as MainActivity, R.layout.itme_dropdown, sort_list)
+        binding.spinner.setAdapter(adapter_spinner)
+        binding.spinner.onItemSelectedListener =  object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                Log.d(TAG, "onItemSelected: $position")
+                viewModel.searchTier(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
         }
     }
 
@@ -61,8 +80,6 @@ class TierFragment : Fragment() {
 
             tierListAdapter.setOnItemClickListener( object :TIerListAdapter.OnItemClickListener{
                 override fun onItemClick(v: View, movieTier: MovieTier, pos: Int) {
-//                    Toast.makeText(context,movieTier.toString(),Toast.LENGTH_LONG).show()
-//                    viewModel.searchMovie(movieTier.url)
                     val action = TierFragmentDirections.actionFragmentTierToMovieFragment(movieTier.url)
                     findNavController().navigate(action)
                 }

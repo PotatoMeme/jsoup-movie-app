@@ -23,12 +23,19 @@ class MainViewModel(
     private val _tierList = MutableLiveData<List<MovieTier>>()
     val tierList: LiveData<List<MovieTier>> get() = _tierList
 
-    fun searchTier() = viewModelScope.launch(Dispatchers.IO) {
+    fun searchTier(sort : Int) = viewModelScope.launch(Dispatchers.IO) {
         Log.d(TAG, "searchTier: start")
-        Log.d(TAG, String.format(BASE_URL + TIER_URL))
-
+        Log.d(TAG, "searchTier: $sort")
         try {
-            val jsoup = Jsoup.connect(String.format(BASE_URL + TIER_URL))
+            val jsoup = Jsoup.connect(String.format(BASE_URL + TIER_URL
+                    + when(sort){
+                        0 -> "?sel=cnt"
+                        1 -> "?sel=cur"
+                        2 -> "?sel=pnt"
+                        else -> {""}
+                    }
+
+            ))
             val doc: Document = jsoup.get()
             val elements: Elements = doc
                 .select("table.list_ranking")
@@ -37,15 +44,16 @@ class MainViewModel(
 
             var list = mutableListOf<MovieTier>()
             var count = 1
+            val div_tit = if(sort == 0) "div.tit3" else "div.tit5"
             elements.forEach { element ->
                 element.run {
-                    if (childrenSize() == 4) {
+                    if (childrenSize() >= 4) {
                         list.add(
                             MovieTier(
                                 tier = count++,
-                                name = select("td.title").select("div.tit3").select("a")
+                                name = select("td.title").select(div_tit).select("a")
                                     .attr("title"),
-                                url = select("td.title").select("div.tit3").select("a").attr("href")
+                                url = select("td.title").select(div_tit).select("a").attr("href")
                             )
                         )
                     }
@@ -189,7 +197,8 @@ class MainViewModel(
                 .text()
 
             Log.d(TAG, "searchMovie: summary, $summary")
-            val data = Movie(name,
+            val data = Movie(
+                name,
                 name_eng,
                 rating_type1,
                 rating_type2,

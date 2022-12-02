@@ -1,5 +1,9 @@
 package com.potatomeme.jsoupmovieapp.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "books")
 data class Movie(
     val name: String,
     val name_eng: String,
@@ -15,6 +19,9 @@ data class Movie(
     val rating: String,//ex) 15금
     val imgUrl: String,
     val summary: String,
-    val url:String,
+    val url: String,
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
 ) {
 }
