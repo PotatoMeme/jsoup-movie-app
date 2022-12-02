@@ -7,9 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potatomeme.jsoupmovieapp.data.model.Movie
 import com.potatomeme.jsoupmovieapp.data.model.MovieTier
+import com.potatomeme.jsoupmovieapp.data.repository.MovieRepository
 import com.potatomeme.jsoupmovieapp.util.Constants.BASE_URL
 import com.potatomeme.jsoupmovieapp.util.Constants.TIER_URL
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
@@ -18,8 +22,10 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 class MainViewModel(
+    private val movieRepository: MovieRepository,
 ) : ViewModel() {
 
+    // jsoup
     private val _tierList = MutableLiveData<List<MovieTier>>()
     val tierList: LiveData<List<MovieTier>> get() = _tierList
 
@@ -225,6 +231,20 @@ class MainViewModel(
         }
         Log.d(TAG, "searchMovie: End")
     }
+
+    // room
+    fun saveMovie(movie: Movie) = viewModelScope.launch(Dispatchers.IO) {
+        movieRepository.insertMovie(movie)
+    }
+
+    fun deleteMovie(movie: Movie) = viewModelScope.launch(Dispatchers.IO) {
+        movieRepository.deleteMovie(movie)
+    }
+
+    var name = ""
+
+    val favoriteMovies: StateFlow<List<Movie>> = movieRepository.getFavoriteMoviesWithName(name)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     companion object {
         private const val TAG = "MainViewModel"

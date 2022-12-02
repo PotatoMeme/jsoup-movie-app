@@ -10,6 +10,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.potatomeme.jsoupmovieapp.R
+import com.potatomeme.jsoupmovieapp.data.db.MovieDataBase
+import com.potatomeme.jsoupmovieapp.data.repository.MovieRepositoryImpl
 import com.potatomeme.jsoupmovieapp.databinding.ActivityMainBinding
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModelProviderFactory
@@ -28,7 +30,9 @@ class MainActivity : AppCompatActivity() {
         _binding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        val factory = MainViewModelProviderFactory()
+        val database =MovieDataBase.getInstance(this)
+        val movieRepository = MovieRepositoryImpl(database)
+        val factory = MainViewModelProviderFactory(movieRepository)
         viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
 
         setupJetpackNavigation()

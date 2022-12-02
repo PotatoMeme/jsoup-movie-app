@@ -3,7 +3,7 @@ package com.potatomeme.jsoupmovieapp.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "books")
+@Entity(tableName = "movies")
 data class Movie(
     val name: String,
     val name_eng: String,
@@ -22,6 +22,6 @@ data class Movie(
     val url: String,
 
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    var id: Long? = null,
 ) {
 }
