@@ -15,5 +15,6 @@ data class Movie(
     val rating: String,//ex) 15금
     val imgUrl: String,
     val summary: String,
+    val url:String,
 ) {
 }

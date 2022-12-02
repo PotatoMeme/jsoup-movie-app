@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.potatomeme.jsoupmovieapp.R
@@ -60,8 +61,10 @@ class TierFragment : Fragment() {
 
             tierListAdapter.setOnItemClickListener( object :TIerListAdapter.OnItemClickListener{
                 override fun onItemClick(v: View, movieTier: MovieTier, pos: Int) {
-                    Toast.makeText(context,movieTier.toString(),Toast.LENGTH_LONG).show()
-                    viewModel.searchMovie(movieTier.url)
+//                    Toast.makeText(context,movieTier.toString(),Toast.LENGTH_LONG).show()
+//                    viewModel.searchMovie(movieTier.url)
+                    val action = TierFragmentDirections.actionFragmentTierToMovieFragment(movieTier.url)
+                    findNavController().navigate(action)
                 }
             })
 

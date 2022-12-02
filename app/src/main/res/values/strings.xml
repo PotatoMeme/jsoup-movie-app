@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">JsoupMovieApp</string>
+    <string name="name_format">- 영화 -\n%s\n%s</string>
+    <string name="ratings_format">관람객: %s \n기자평론가: %s\n네티즌: %s</string>
+    <string name="type_format">장르: %s</string>
+    <string name="country_format">국가: %s</string>
+    <string name="runningTime_format">러닝타임: %s</string>
+    <string name="openingPeriod_format">출시: %s</string>
+    <string name="director_format">감독: %s</string>
+    <string name="actor_format">- 배우 -\n %s</string>
+    <string name="rating_format">관람등급: %s</string>
+    <string name="summary_format">- 줄거리 -\n %s</string>
 </resources>

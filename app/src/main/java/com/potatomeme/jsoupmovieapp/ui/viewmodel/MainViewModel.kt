@@ -202,7 +202,8 @@ class MainViewModel(
                 actor,
                 rating,
                 img_url,
-                summary)
+                summary,
+                BASE_URL + movieUrl)
             _movie.postValue(data)
 
 

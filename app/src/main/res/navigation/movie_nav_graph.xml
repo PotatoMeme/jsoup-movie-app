@@ -20,5 +20,21 @@
     <fragment
         android:id="@+id/fragment_tier"
         android:name="com.potatomeme.jsoupmovieapp.ui.view.TierFragment"
-        android:label="TierFragment" />
+        android:label="TierFragment" >
+        <action
+            android:id="@+id/action_fragment_tier_to_movieFragment"
+            app:destination="@id/fragment_movie"
+            app:enterAnim="@anim/slide_to_left_enter"
+            app:exitAnim="@anim/slide_to_left_exit"
+            app:popEnterAnim="@anim/slide_to_right_enter"
+            app:popExitAnim="@anim/slide_to_right_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_movie"
+        android:name="com.potatomeme.jsoupmovieapp.ui.view.MovieFragment"
+        android:label="MovieFragment" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
 </navigation>
