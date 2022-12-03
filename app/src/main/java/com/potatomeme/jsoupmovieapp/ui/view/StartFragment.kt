@@ -48,6 +48,8 @@ class StartFragment : Fragment() {
 
     fun btn3Click() {
         Toast.makeText(context, "btn3 Clicked", Toast.LENGTH_LONG).show()
+        val action = StartFragmentDirections.actionFragmentStartToFragmentSaved()
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

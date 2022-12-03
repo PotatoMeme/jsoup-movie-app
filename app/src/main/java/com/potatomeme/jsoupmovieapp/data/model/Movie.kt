@@ -1,8 +1,11 @@
 package com.potatomeme.jsoupmovieapp.data.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "movies")
 data class Movie(
     val name: String,
@@ -23,5 +26,4 @@ data class Movie(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null,
-) {
-}
+) :Parcelable

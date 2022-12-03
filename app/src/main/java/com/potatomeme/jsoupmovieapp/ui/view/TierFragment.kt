@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.potatomeme.jsoupmovieapp.R
 import com.potatomeme.jsoupmovieapp.data.model.MovieTier
 import com.potatomeme.jsoupmovieapp.databinding.FragmentTierBinding
-import com.potatomeme.jsoupmovieapp.ui.adapter.TIerListAdapter
+import com.potatomeme.jsoupmovieapp.ui.adapter.TierListAdapter
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
 
 class TierFragment : Fragment() {
@@ -25,7 +24,7 @@ class TierFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: MainViewModel
 
-    private lateinit var tierListAdapter: TIerListAdapter
+    private lateinit var tierListAdapter: TierListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +65,7 @@ class TierFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        tierListAdapter = TIerListAdapter()
+        tierListAdapter = TierListAdapter()
         binding.rvTierlist.apply {
             setHasFixedSize(true)
             layoutManager =
@@ -78,7 +77,7 @@ class TierFragment : Fragment() {
                 )
             )
 
-            tierListAdapter.setOnItemClickListener( object :TIerListAdapter.OnItemClickListener{
+            tierListAdapter.setOnItemClickListener( object :TierListAdapter.OnItemClickListener{
                 override fun onItemClick(v: View, movieTier: MovieTier, pos: Int) {
                     val action = TierFragmentDirections.actionFragmentTierToMovieFragment(movieTier.url)
                     findNavController().navigate(action)

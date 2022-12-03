@@ -16,7 +16,7 @@ import com.potatomeme.jsoupmovieapp.databinding.FragmentMovieBinding
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
 import com.potatomeme.jsoupmovieapp.util.collectLatestStateFlow
 
-class MovieFragment : Fragment() {
+class SavedMovieFragment : Fragment() {
 
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
@@ -37,19 +37,7 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         viewModel.searchMovie(args.url)
-        viewModel.movie.observe(viewLifecycleOwner) {
-            binding.movieItem = it
-            Glide.with(binding.movieImage.context)
-                .load(it.imgUrl)
-                .into(binding.movieImage)
-        }
-        binding.movieSave.setOnClickListener {
-            viewModel.movie.value?.let { data -> viewModel.saveMovie(data) }
-            Log.d(TAG, "onViewCreated: ${viewModel.movie.value}")
-        }
-        collectLatestStateFlow(viewModel.savedMovies){
-            Log.d(TAG, "collectLatestStateFlow: $it")
-        }
+
     }
 
 

@@ -16,6 +16,13 @@
             app:exitAnim="@anim/slide_to_left_exit"
             app:popEnterAnim="@anim/slide_to_right_enter"
             app:popExitAnim="@anim/slide_to_right_exit" />
+        <action
+            android:id="@+id/action_fragment_start_to_fragment_saved"
+            app:destination="@id/fragment_saved"
+            app:enterAnim="@anim/slide_to_left_enter"
+            app:exitAnim="@anim/slide_to_left_exit"
+            app:popEnterAnim="@anim/slide_to_right_enter"
+            app:popExitAnim="@anim/slide_to_right_exit" />
     </fragment>
     <fragment
         android:id="@+id/fragment_tier"
@@ -36,5 +43,25 @@
         <argument
             android:name="url"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_saved"
+        android:name="com.potatomeme.jsoupmovieapp.ui.view.SavedFragment"
+        android:label="SavedFragment" >
+        <action
+            android:id="@+id/action_fragment_saved_to_fragment_movie_saved"
+            app:destination="@id/fragment_movie_saved"
+            app:enterAnim="@anim/slide_to_left_enter"
+            app:exitAnim="@anim/slide_to_left_exit"
+            app:popEnterAnim="@anim/slide_to_right_enter"
+            app:popExitAnim="@anim/slide_to_right_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_movie_saved"
+        android:name="com.potatomeme.jsoupmovieapp.ui.view.SavedMovieFragment"
+        android:label="SavedMovieFragment" >
+        <argument
+            android:name="movie"
+            app:argType="com.potatomeme.jsoupmovieapp.data.model.Movie" />
     </fragment>
 </navigation>

@@ -15,11 +15,11 @@ class MovieRepositoryImpl(
         db.movieDao().deleteMovie(movie)
     }
 
-    override fun getFavoriteMovies(): Flow<List<Movie>> {
+    override fun getSavedMovies(): Flow<List<Movie>> {
         return db.movieDao().getFavoriteMovies()
     }
 
-    override fun getFavoriteMoviesWithName(name: String): Flow<List<Movie>> {
+    override fun getSavedMoviesWithName(name: String): Flow<List<Movie>> {
         return db.movieDao().getFavoriteMoviesWithName(name)
     }
 

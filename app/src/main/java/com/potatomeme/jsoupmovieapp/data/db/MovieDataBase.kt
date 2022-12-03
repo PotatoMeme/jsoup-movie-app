@@ -22,7 +22,7 @@ abstract class MovieDataBase : RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 MovieDataBase::class.java,
-                "favorite-movies"
+                "saved-movies"
             ).build()
 
         fun getInstance(context: Context): MovieDataBase =

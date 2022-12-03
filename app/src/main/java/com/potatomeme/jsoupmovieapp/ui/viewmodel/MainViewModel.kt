@@ -243,7 +243,7 @@ class MainViewModel(
 
     var name = ""
 
-    val favoriteMovies: StateFlow<List<Movie>> = movieRepository.getFavoriteMoviesWithName(name)
+    val savedMovies: StateFlow<List<Movie>> = movieRepository.getSavedMoviesWithName("%$name%")
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     companion object {

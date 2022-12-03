@@ -13,9 +13,9 @@ interface MovieRepository {
 
     suspend fun deleteMovie(movie: Movie)
 
-    fun getFavoriteMovies(): Flow<List<Movie>>
+    fun getSavedMovies(): Flow<List<Movie>>
 
-    fun getFavoriteMoviesWithName(
+    fun getSavedMoviesWithName(
         name: String
     ): Flow<List<Movie>>
 

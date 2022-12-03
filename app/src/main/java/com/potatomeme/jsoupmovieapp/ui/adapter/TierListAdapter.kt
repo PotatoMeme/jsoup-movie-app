@@ -1,7 +1,6 @@
 package com.potatomeme.jsoupmovieapp.ui.adapter
 
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.potatomeme.jsoupmovieapp.data.model.MovieTier
 import com.potatomeme.jsoupmovieapp.databinding.ItemTierBinding
 
-class TIerListAdapter : ListAdapter<MovieTier, TIerListAdapter.TierViewHolder>(TierDiffCallback) {
+class TierListAdapter : ListAdapter<MovieTier, TierListAdapter.TierViewHolder>(TierDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TierViewHolder {
         return TierViewHolder(
