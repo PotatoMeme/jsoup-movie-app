@@ -22,8 +22,6 @@ data class Movie(
     val rating: String,//ex) 15금
     val imgUrl: String,
     val summary: String,
+    @PrimaryKey(autoGenerate = false)
     val url: String,
-
-    @PrimaryKey(autoGenerate = true)
-    var id: Long? = null,
 ) :Parcelable

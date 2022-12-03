@@ -82,7 +82,7 @@ class MainViewModel(
     fun searchMovie(movieUrl: String) = viewModelScope.launch(Dispatchers.IO) {
         Log.d(TAG, "searchMovie: start")
         try {
-            val jsoup = Jsoup.connect(String.format(BASE_URL + movieUrl))
+            val jsoup = Jsoup.connect(String.format(movieUrl))
             val doc: Document = jsoup.get()
             val elements: Elements = doc
                 .select("div.article")
@@ -241,10 +241,14 @@ class MainViewModel(
         movieRepository.deleteMovie(movie)
     }
 
+
     var name = ""
 
-    val savedMovies: StateFlow<List<Movie>> = movieRepository.getSavedMoviesWithName("%$name%")
+    val savedMovies: StateFlow<List<Movie>> = movieRepository.getSavedMovies()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+
+
+
 
     companion object {
         private const val TAG = "MainViewModel"

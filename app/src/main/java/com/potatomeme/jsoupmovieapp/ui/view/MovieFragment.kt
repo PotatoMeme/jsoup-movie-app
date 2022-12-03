@@ -5,15 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.potatomeme.jsoupmovieapp.R
 import com.potatomeme.jsoupmovieapp.databinding.FragmentMovieBinding
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
+import com.potatomeme.jsoupmovieapp.util.Constants.BASE_URL
 import com.potatomeme.jsoupmovieapp.util.collectLatestStateFlow
 
 class MovieFragment : Fragment() {
@@ -23,6 +23,8 @@ class MovieFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
 
     private val args by navArgs<MovieFragmentArgs>()
+
+    private var saved_state = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,20 +38,40 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
-        viewModel.searchMovie(args.url)
+        viewModel.searchMovie(BASE_URL + args.url)
         viewModel.movie.observe(viewLifecycleOwner) {
             binding.movieItem = it
             Glide.with(binding.movieImage.context)
                 .load(it.imgUrl)
                 .into(binding.movieImage)
         }
+        collectLatestStateFlow(viewModel.savedMovies) { movies ->
+            saved_state = movies.any { it.url == BASE_URL + args.url }
+            binding.movieSave.text = if (saved_state) "delete" else "save"
+        }
         binding.movieSave.setOnClickListener {
-            viewModel.movie.value?.let { data -> viewModel.saveMovie(data) }
-            Log.d(TAG, "onViewCreated: ${viewModel.movie.value}")
+            if (saved_state) {
+                viewModel.movie.value?.let { data -> viewModel.deleteMovie(data) }
+                Snackbar.make(view, "Recipe has deleted", Snackbar.LENGTH_SHORT).apply {
+                    setAction("Undo") {
+                        viewModel.movie.value?.let { data -> viewModel.saveMovie(data) }
+                    }
+                }.show()
+                saved_state = false
+            } else {
+                viewModel.movie.value?.let { data -> viewModel.saveMovie(data) }
+                Snackbar.make(view, "Recipe has Saved", Snackbar.LENGTH_SHORT).apply {
+                    setAction("Undo") {
+                        viewModel.movie.value?.let { data -> viewModel.deleteMovie(data) }
+                    }
+                }.show()
+                saved_state = true
+            }
         }
-        collectLatestStateFlow(viewModel.savedMovies){
-            Log.d(TAG, "collectLatestStateFlow: $it")
+        binding.movieUpdate.setOnClickListener {
+            viewModel.searchMovie(BASE_URL + args.url)
         }
+
     }
 
 

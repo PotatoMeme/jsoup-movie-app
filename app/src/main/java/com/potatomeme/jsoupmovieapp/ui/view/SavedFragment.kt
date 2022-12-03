@@ -6,17 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.potatomeme.jsoupmovieapp.R
 import com.potatomeme.jsoupmovieapp.data.model.Movie
 import com.potatomeme.jsoupmovieapp.databinding.FragmentSavedBinding
 import com.potatomeme.jsoupmovieapp.ui.adapter.SavedListAdapter
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
 import com.potatomeme.jsoupmovieapp.util.collectLatestStateFlow
+import kotlinx.coroutines.flow.collectLatest
 
 class SavedFragment : Fragment() {
 
@@ -25,6 +30,7 @@ class SavedFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
 
     private lateinit var savedListAdapter: SavedListAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,8 +45,23 @@ class SavedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         setupRecyclerView()
-        collectLatestStateFlow(viewModel.savedMovies){
-            Log.d(TAG, "collectLatestStateFlow: $it")
+        setupTouchHelper(view)
+        collectLatestStateFlow(viewModel.savedMovies) {
+            Log.d(TAG, "collectLatestStateFlow in ViewCreated: $it")
+            savedListAdapter.submitList(it)
+        }
+
+        binding.btnSearch.setOnClickListener {
+            //searchDatabase(binding.etName.toString())
+        }
+    }
+
+    var i = 0
+    private fun searchDatabase(query: String) {
+        viewModel.name = query
+        val j = i++
+        collectLatestStateFlow (viewModel.savedMovies) {
+            Log.d(TAG, "searchDatabase try $j : ${it.size}")
             savedListAdapter.submitList(it)
         }
     }
@@ -58,11 +79,10 @@ class SavedFragment : Fragment() {
                 )
             )
 
-            savedListAdapter.setOnItemClickListener( object :SavedListAdapter.OnItemClickListener{
+            savedListAdapter.setOnItemClickListener(object : SavedListAdapter.OnItemClickListener {
                 override fun onItemClick(v: View, movie: Movie, pos: Int) {
-//                    val action = SavedFragmentDirections.actionFragmentSavedToFragmentDetail(recipe)
-//                    findNavController().navigate(action)
-                    Toast.makeText((context as MainActivity),movie.toString(),Toast.LENGTH_SHORT).show()
+                    val action = SavedFragmentDirections.actionFragmentSavedToFragmentMovieSaved(movie)
+                    findNavController().navigate(action)
                 }
             })
             adapter = savedListAdapter
@@ -70,12 +90,42 @@ class SavedFragment : Fragment() {
 
     }
 
+    private fun setupTouchHelper(view: View) {
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder,
+            ): Boolean {
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.bindingAdapterPosition
+                val movie = savedListAdapter.currentList[position]
+                viewModel.deleteMovie(movie)
+                Snackbar.make(view, "Book has deleted", Snackbar.LENGTH_SHORT).apply {
+                    setAction("Undo") {
+                        viewModel.saveMovie(movie)
+                    }
+                }.show()
+            }
+        }
+
+        ItemTouchHelper(itemTouchHelperCallback).apply {
+            attachToRecyclerView(binding.rvSavedlist)
+        }
+    }
+
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
     }
 
-    companion object{
+    companion object {
         private const val TAG = "StartFragment"
     }
 }

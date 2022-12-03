@@ -12,7 +12,7 @@ interface MovieDao {
     @Delete
     suspend fun deleteMovie(movie: Movie)
 
-    @Query("SELECT * FROM movies")
+    @Query("SELECT * FROM movies Order By url")
     fun getFavoriteMovies(): Flow<List<Movie>>
 
     @Query("SELECT * FROM movies WHERE name LIKE :name OR name_eng LIKE :name")
