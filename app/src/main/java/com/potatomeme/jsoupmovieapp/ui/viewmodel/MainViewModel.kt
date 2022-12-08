@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.potatomeme.jsoupmovieapp.data.model.Movie
 import com.potatomeme.jsoupmovieapp.data.model.MovieTier
 import com.potatomeme.jsoupmovieapp.data.model.SearchMovieList
@@ -13,9 +15,7 @@ import com.potatomeme.jsoupmovieapp.util.Constants.BASE_URL
 import com.potatomeme.jsoupmovieapp.util.Constants.SEARCH_URL
 import com.potatomeme.jsoupmovieapp.util.Constants.TIER_URL
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
@@ -252,13 +252,10 @@ class MainViewModel(
                 .select("li")
 
             var list = mutableListOf<SearchMovieList>()
-            var count = 1
             elements.forEach { element ->
-                Log.d(TAG, "searchMovieWithName: ${count++} ${element.select("dt").text()}")
                 element.run {
                     list.add(
                         SearchMovieList(
-                            num = count++,
                             name = select("dt").text(),
                             imgUrl = select("p.result_thumb").select("a").select("img").attr("src"),
                             url = select("dt").select("a").attr("href")
@@ -275,6 +272,19 @@ class MainViewModel(
             exception.printStackTrace()
         }
         Log.d(TAG, "searchTier: End")
+    }
+
+    private val _searchPagingResult = MutableStateFlow<PagingData<SearchMovieList>>(PagingData.empty())
+    val searchPagingResult: StateFlow<PagingData<SearchMovieList>> = _searchPagingResult.asStateFlow()
+
+    fun searchMoviesPaging(query: String) {
+        viewModelScope.launch {
+           movieRepository.searchMoviesPaging(query)
+                .cachedIn(viewModelScope)
+                .collect {
+                    _searchPagingResult.value = it
+                }
+        }
     }
 
     // room

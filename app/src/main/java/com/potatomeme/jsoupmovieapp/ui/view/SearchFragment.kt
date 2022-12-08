@@ -23,6 +23,7 @@ import com.potatomeme.jsoupmovieapp.databinding.FragmentSavedBinding
 import com.potatomeme.jsoupmovieapp.databinding.FragmentSearchBinding
 import com.potatomeme.jsoupmovieapp.ui.adapter.SavedListAdapter
 import com.potatomeme.jsoupmovieapp.ui.adapter.SearchListAdapter
+import com.potatomeme.jsoupmovieapp.ui.adapter.SearchPagingListAdapter
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
 import com.potatomeme.jsoupmovieapp.util.collectLatestStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -33,8 +34,8 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: MainViewModel
 
-    private lateinit var searchListAdapter: SearchListAdapter
-
+    //private lateinit var searchListAdapter: SearchListAdapter
+    private lateinit var movieSearchPagingListAdapter: SearchPagingListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,19 +51,44 @@ class SearchFragment : Fragment() {
         viewModel = (activity as MainActivity).viewModel
         setupRecyclerView()
 
-        viewModel.searchList.observe(viewLifecycleOwner){
-            searchListAdapter.submitList(it)
+//        viewModel.searchList.observe(viewLifecycleOwner){
+//            searchListAdapter.submitList(it)
+//        }
+
+        collectLatestStateFlow(viewModel.searchPagingResult) {
+           movieSearchPagingListAdapter.submitData(it)
         }
 
         binding.btnSearch.setOnClickListener {
-           viewModel.searchMovieWithName(binding.etName.text.toString())
+           //viewModel.searchMovieWithName(binding.etName.text.toString())
+            viewModel.searchMoviesPaging(binding.etName.text.toString())
         }
     }
 
 
 
     private fun setupRecyclerView() {
-        searchListAdapter = SearchListAdapter()
+//        searchListAdapter = SearchListAdapter()
+//        binding.rvSavedlist.apply {
+//            setHasFixedSize(true)
+//            layoutManager =
+//                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+//            addItemDecoration(
+//                DividerItemDecoration(
+//                    requireContext(),
+//                    0
+//                )
+//            )
+//
+//            searchListAdapter.setOnItemClickListener(object : SearchListAdapter.OnItemClickListener {
+//                override fun onItemClick(v: View, movieSearch: SearchMovieList, pos: Int) {
+//                    val action = SearchFragmentDirections.actionFragmentSearchToFragmentMovie(movieSearch.url)
+//                    findNavController().navigate(action)
+//                }
+//            })
+//            adapter = searchListAdapter
+//        }
+        movieSearchPagingListAdapter = SearchPagingListAdapter()
         binding.rvSavedlist.apply {
             setHasFixedSize(true)
             layoutManager =
@@ -70,19 +96,14 @@ class SearchFragment : Fragment() {
             addItemDecoration(
                 DividerItemDecoration(
                     requireContext(),
-                    0
+                    DividerItemDecoration.VERTICAL
                 )
             )
-
-            searchListAdapter.setOnItemClickListener(object : SearchListAdapter.OnItemClickListener {
-                override fun onItemClick(v: View, movieSearch: SearchMovieList, pos: Int) {
-                    val action = SearchFragmentDirections.actionFragmentSearchToFragmentMovie(movieSearch.url)
-                    findNavController().navigate(action)
-                }
-            })
-            adapter = searchListAdapter
         }
-
+        movieSearchPagingListAdapter.setOnItemClickListener {
+            val action = SearchFragmentDirections.actionFragmentSearchToFragmentMovie(it.url)
+            findNavController().navigate(action)
+        }
     }
 
 
