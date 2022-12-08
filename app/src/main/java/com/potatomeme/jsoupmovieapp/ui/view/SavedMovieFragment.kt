@@ -1,5 +1,7 @@
 package com.potatomeme.jsoupmovieapp.ui.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import com.potatomeme.jsoupmovieapp.R
 import com.potatomeme.jsoupmovieapp.data.model.Movie
 import com.potatomeme.jsoupmovieapp.databinding.FragmentMovieBinding
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
+import com.potatomeme.jsoupmovieapp.util.Constants
 import com.potatomeme.jsoupmovieapp.util.collectLatestStateFlow
 
 class SavedMovieFragment : Fragment() {
@@ -80,6 +83,15 @@ class SavedMovieFragment : Fragment() {
         }
         binding.movieUpdate.setOnClickListener {
             viewModel.searchMovieWithUrl(movie.url)
+        }
+        binding.movieMore.setOnClickListener{
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW, Uri.parse(
+                        viewModel.movie.value?.url ?: ("${Constants.BASE_URL}/movie/search/")
+                    )
+                )
+            )
         }
     }
 

@@ -1,5 +1,7 @@
 package com.potatomeme.jsoupmovieapp.ui.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -74,6 +76,15 @@ class MovieFragment : Fragment() {
         }
         binding.movieUpdate.setOnClickListener {
             viewModel.searchMovieWithUrl(BASE_URL + args.url)
+        }
+        binding.movieMore.setOnClickListener {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW, Uri.parse(
+                        viewModel.movie.value?.url ?: ("$BASE_URL/movie/search/")
+                    )
+                )
+            )
         }
 
     }

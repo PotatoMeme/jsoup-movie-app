@@ -230,6 +230,15 @@
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/movie_more"
+                android:text="More"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
