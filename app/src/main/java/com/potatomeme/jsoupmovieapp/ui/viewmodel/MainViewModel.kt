@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.potatomeme.jsoupmovieapp.data.model.Movie
 import com.potatomeme.jsoupmovieapp.data.model.MovieTier
+import com.potatomeme.jsoupmovieapp.data.model.SearchMovieList
 import com.potatomeme.jsoupmovieapp.data.repository.MovieRepository
 import com.potatomeme.jsoupmovieapp.util.Constants.BASE_URL
+import com.potatomeme.jsoupmovieapp.util.Constants.SEARCH_URL
 import com.potatomeme.jsoupmovieapp.util.Constants.TIER_URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +20,6 @@ import kotlinx.coroutines.launch
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 class MainViewModel(
@@ -29,19 +30,24 @@ class MainViewModel(
     private val _tierList = MutableLiveData<List<MovieTier>>()
     val tierList: LiveData<List<MovieTier>> get() = _tierList
 
-    fun searchTier(sort : Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun searchTier(sort: Int) = viewModelScope.launch(Dispatchers.IO) {
         Log.d(TAG, "searchTier: start")
         Log.d(TAG, "searchTier: $sort")
         try {
-            val jsoup = Jsoup.connect(String.format(BASE_URL + TIER_URL
-                    + when(sort){
+            val jsoup = Jsoup.connect(
+                String.format(
+                    BASE_URL + TIER_URL
+                            + when (sort) {
                         0 -> "?sel=cnt"
                         1 -> "?sel=cur"
                         2 -> "?sel=pnt"
-                        else -> {""}
+                        else -> {
+                            ""
+                        }
                     }
 
-            ))
+                )
+            )
             val doc: Document = jsoup.get()
             val elements: Elements = doc
                 .select("table.list_ranking")
@@ -50,7 +56,7 @@ class MainViewModel(
 
             var list = mutableListOf<MovieTier>()
             var count = 1
-            val div_tit = if(sort == 0) "div.tit3" else "div.tit5"
+            val div_tit = if (sort == 0) "div.tit3" else "div.tit5"
             elements.forEach { element ->
                 element.run {
                     if (childrenSize() >= 4) {
@@ -79,7 +85,7 @@ class MainViewModel(
     private val _movie = MutableLiveData<Movie>()
     val movie: LiveData<Movie> get() = _movie
 
-    fun searchMovie(movieUrl: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun searchMovieWithUrl(movieUrl: String) = viewModelScope.launch(Dispatchers.IO) {
         Log.d(TAG, "searchMovie: start")
         try {
             val jsoup = Jsoup.connect(String.format(movieUrl))
@@ -218,7 +224,8 @@ class MainViewModel(
                 rating,
                 img_url,
                 summary,
-                BASE_URL + movieUrl)
+                movieUrl
+            )
             _movie.postValue(data)
 
 
@@ -230,6 +237,44 @@ class MainViewModel(
             exception.printStackTrace()
         }
         Log.d(TAG, "searchMovie: End")
+    }
+
+    private val _searchList = MutableLiveData<List<SearchMovieList>>()
+    val searchList: LiveData<List<SearchMovieList>> get() = _searchList
+    fun searchMovieWithName(name: String) = viewModelScope.launch(Dispatchers.IO) {
+        Log.d(TAG, "searchMovieWithName: start")
+        Log.d(TAG, "searchMovieWithName: $name")
+        try {
+            val jsoup = Jsoup.connect(String.format(BASE_URL + SEARCH_URL + name))
+            val doc: Document = jsoup.get()
+            val elements: Elements = doc
+                .select("ul.search_list_1")
+                .select("li")
+
+            var list = mutableListOf<SearchMovieList>()
+            var count = 1
+            elements.forEach { element ->
+                Log.d(TAG, "searchMovieWithName: ${count++} ${element.select("dt").text()}")
+                element.run {
+                    list.add(
+                        SearchMovieList(
+                            num = count++,
+                            name = select("dt").text(),
+                            imgUrl = select("p.result_thumb").select("a").select("img").attr("src"),
+                            url = select("dt").select("a").attr("href")
+                        )
+                    )
+                }
+            }
+            _searchList.postValue(list.toList())
+        } catch (httpStatusException: HttpStatusException) {
+            Log.e(TAG, httpStatusException.message.toString())
+            httpStatusException.printStackTrace()
+        } catch (exception: Exception) {
+            Log.e(TAG, exception.message.toString())
+            exception.printStackTrace()
+        }
+        Log.d(TAG, "searchTier: End")
     }
 
     // room
@@ -246,8 +291,6 @@ class MainViewModel(
 
     val savedMovies: StateFlow<List<Movie>> = movieRepository.getSavedMovies()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
-
-
 
 
     companion object {

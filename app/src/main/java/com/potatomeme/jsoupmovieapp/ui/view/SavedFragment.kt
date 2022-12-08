@@ -106,7 +106,7 @@ class SavedFragment : Fragment() {
                 val position = viewHolder.bindingAdapterPosition
                 val movie = savedListAdapter.currentList[position]
                 viewModel.deleteMovie(movie)
-                Snackbar.make(view, "Book has deleted", Snackbar.LENGTH_SHORT).apply {
+                Snackbar.make(view, "Movie has deleted", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo") {
                         viewModel.saveMovie(movie)
                     }

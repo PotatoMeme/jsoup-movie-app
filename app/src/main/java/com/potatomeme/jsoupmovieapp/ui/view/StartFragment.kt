@@ -37,17 +37,19 @@ class StartFragment : Fragment() {
     }
 
     fun btn1Click() {
-        Toast.makeText(context, "btn1 Clicked", Toast.LENGTH_LONG).show()
+        //Toast.makeText(context, "btn1 Clicked", Toast.LENGTH_LONG).show()
         val action = StartFragmentDirections.actionFragmentStartToFragmentTier()
         findNavController().navigate(action)
     }
 
     fun btn2Click() {
-        Toast.makeText(context, "btn2 Clicked", Toast.LENGTH_LONG).show()
+        //Toast.makeText(context, "btn2 Clicked", Toast.LENGTH_LONG).show()
+        val action = StartFragmentDirections.actionFragmentStartToFragmentSearch()
+        findNavController().navigate(action)
     }
 
     fun btn3Click() {
-        Toast.makeText(context, "btn3 Clicked", Toast.LENGTH_LONG).show()
+        //Toast.makeText(context, "btn3 Clicked", Toast.LENGTH_LONG).show()
         val action = StartFragmentDirections.actionFragmentStartToFragmentSaved()
         findNavController().navigate(action)
     }

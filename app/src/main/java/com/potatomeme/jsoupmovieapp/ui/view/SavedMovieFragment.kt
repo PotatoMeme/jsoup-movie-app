@@ -1,12 +1,9 @@
 package com.potatomeme.jsoupmovieapp.ui.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
@@ -16,7 +13,6 @@ import com.potatomeme.jsoupmovieapp.R
 import com.potatomeme.jsoupmovieapp.data.model.Movie
 import com.potatomeme.jsoupmovieapp.databinding.FragmentMovieBinding
 import com.potatomeme.jsoupmovieapp.ui.viewmodel.MainViewModel
-import com.potatomeme.jsoupmovieapp.util.Constants
 import com.potatomeme.jsoupmovieapp.util.collectLatestStateFlow
 
 class SavedMovieFragment : Fragment() {
@@ -50,6 +46,7 @@ class SavedMovieFragment : Fragment() {
 
         viewModel.movie.observe(viewLifecycleOwner) {
             movie = it
+            viewModel.saveMovie(movie)
             binding.movieItem = movie
             Glide.with(binding.movieImage.context)
                 .load(it.imgUrl)
@@ -65,7 +62,7 @@ class SavedMovieFragment : Fragment() {
         binding.movieSave.setOnClickListener {
             if (saved_state) {
                 viewModel.deleteMovie(movie)
-                Snackbar.make(view, "Recipe has deleted", Snackbar.LENGTH_SHORT).apply {
+                Snackbar.make(view, "Movie has deleted", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo") {
                         viewModel.saveMovie(movie)
                     }
@@ -73,7 +70,7 @@ class SavedMovieFragment : Fragment() {
                 saved_state = false
             } else {
                 viewModel.saveMovie(movie)
-                Snackbar.make(view, "Recipe has Saved", Snackbar.LENGTH_SHORT).apply {
+                Snackbar.make(view, "Movie has Saved", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo") {
                         viewModel.deleteMovie(movie)
                     }
@@ -82,7 +79,7 @@ class SavedMovieFragment : Fragment() {
             }
         }
         binding.movieUpdate.setOnClickListener {
-            viewModel.searchMovie(movie.url)
+            viewModel.searchMovieWithUrl(movie.url)
         }
     }
 

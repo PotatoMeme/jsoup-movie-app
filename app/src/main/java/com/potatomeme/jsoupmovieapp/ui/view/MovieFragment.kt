@@ -38,21 +38,25 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
-        viewModel.searchMovie(BASE_URL + args.url)
+        viewModel.searchMovieWithUrl(BASE_URL + args.url)
         viewModel.movie.observe(viewLifecycleOwner) {
             binding.movieItem = it
             Glide.with(binding.movieImage.context)
                 .load(it.imgUrl)
                 .into(binding.movieImage)
         }
+
+
         collectLatestStateFlow(viewModel.savedMovies) { movies ->
+            Log.d(TAG, "onViewCreated: ${BASE_URL + args.url}")
             saved_state = movies.any { it.url == BASE_URL + args.url }
             binding.movieSave.text = if (saved_state) "delete" else "save"
         }
+
         binding.movieSave.setOnClickListener {
             if (saved_state) {
                 viewModel.movie.value?.let { data -> viewModel.deleteMovie(data) }
-                Snackbar.make(view, "Recipe has deleted", Snackbar.LENGTH_SHORT).apply {
+                Snackbar.make(view, "Movie has deleted", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo") {
                         viewModel.movie.value?.let { data -> viewModel.saveMovie(data) }
                     }
@@ -60,7 +64,7 @@ class MovieFragment : Fragment() {
                 saved_state = false
             } else {
                 viewModel.movie.value?.let { data -> viewModel.saveMovie(data) }
-                Snackbar.make(view, "Recipe has Saved", Snackbar.LENGTH_SHORT).apply {
+                Snackbar.make(view, "Movie has Saved", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo") {
                         viewModel.movie.value?.let { data -> viewModel.deleteMovie(data) }
                     }
@@ -69,7 +73,7 @@ class MovieFragment : Fragment() {
             }
         }
         binding.movieUpdate.setOnClickListener {
-            viewModel.searchMovie(BASE_URL + args.url)
+            viewModel.searchMovieWithUrl(BASE_URL + args.url)
         }
 
     }
