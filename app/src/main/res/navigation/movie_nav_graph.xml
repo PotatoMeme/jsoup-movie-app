@@ -25,7 +25,11 @@
             app:popExitAnim="@anim/slide_to_right_exit" />
         <action
             android:id="@+id/action_fragment_start_to_fragment_search"
-            app:destination="@id/fragment_search" />
+            app:destination="@id/fragment_search"
+            app:enterAnim="@anim/slide_to_left_enter"
+            app:exitAnim="@anim/slide_to_left_exit"
+            app:popEnterAnim="@anim/slide_to_right_enter"
+            app:popExitAnim="@anim/slide_to_right_exit" />
     </fragment>
     <fragment
         android:id="@+id/fragment_tier"
@@ -70,5 +74,13 @@
     <fragment
         android:id="@+id/fragment_search"
         android:name="com.potatomeme.jsoupmovieapp.ui.view.SearchFragment"
-        android:label="SearchFragment" />
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_fragment_search_to_fragment_movie"
+            app:destination="@id/fragment_movie"
+            app:enterAnim="@anim/slide_to_left_enter"
+            app:exitAnim="@anim/slide_to_left_exit"
+            app:popEnterAnim="@anim/slide_to_right_enter"
+            app:popExitAnim="@anim/slide_to_right_exit" />
+    </fragment>
 </navigation>

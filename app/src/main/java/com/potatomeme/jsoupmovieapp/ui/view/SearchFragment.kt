@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -75,7 +76,8 @@ class SearchFragment : Fragment() {
 
             searchListAdapter.setOnItemClickListener(object : SearchListAdapter.OnItemClickListener {
                 override fun onItemClick(v: View, movieSearch: SearchMovieList, pos: Int) {
-                    Log.d(TAG, "onItemClick: $movieSearch")
+                    val action = SearchFragmentDirections.actionFragmentSearchToFragmentMovie(movieSearch.url)
+                    findNavController().navigate(action)
                 }
             })
             adapter = searchListAdapter
