@@ -13,4 +13,9 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="CustomTimePicker">
+        <item name="android:textColorPrimary">@color/black</item><!-- text color -->
+        <item name="colorControlNormal">@android:color/darker_gray</item><!-- divider color -->
+        <item name="android:textSize">15dp</item>
+    </style>
 </resources>

@@ -4,8 +4,10 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.potatomeme.jsoupmovieapp.data.model.ApiResponse
 import com.potatomeme.jsoupmovieapp.data.model.Movie
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 interface MovieRepository {
     // Room
@@ -19,4 +21,6 @@ interface MovieRepository {
         name: String
     ): Flow<List<Movie>>
 
+    //API
+    suspend fun getRanking(date:String): Response<ApiResponse>
 }

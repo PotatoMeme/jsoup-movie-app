@@ -51,9 +51,6 @@ class SavedFragment : Fragment() {
             savedListAdapter.submitList(it)
         }
 
-        binding.btnSearch.setOnClickListener {
-            //searchDatabase(binding.etName.toString())
-        }
     }
 
     var i = 0

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.potatomeme.jsoupmovieapp.data.model.ApiResponse
 import com.potatomeme.jsoupmovieapp.data.model.Movie
 import com.potatomeme.jsoupmovieapp.data.model.MovieTier
 import com.potatomeme.jsoupmovieapp.data.model.SearchMovieList
@@ -38,9 +39,9 @@ class MainViewModel(
                 String.format(
                     BASE_URL + TIER_URL
                             + when (sort) {
-                        0 -> "?sel=cnt"
-                        1 -> "?sel=cur"
-                        2 -> "?sel=pnt"
+                        1 -> "?sel=cnt"
+                        2 -> "?sel=cur"
+                        3 -> "?sel=pnt"
                         else -> {
                             ""
                         }
@@ -56,7 +57,7 @@ class MainViewModel(
 
             var list = mutableListOf<MovieTier>()
             var count = 1
-            val div_tit = if (sort == 0) "div.tit3" else "div.tit5"
+            val div_tit = if (sort == 1) "div.tit3" else "div.tit5"
             elements.forEach { element ->
                 element.run {
                     if (childrenSize() >= 4) {
@@ -275,6 +276,49 @@ class MainViewModel(
             exception.printStackTrace()
         }
         Log.d(TAG, "searchTier: End")
+    }
+
+    //Api
+
+    private val _searchApiList = MutableLiveData<ApiResponse>()
+    val searchApiList : LiveData<ApiResponse> = _searchApiList
+
+    fun getRanking(date:String) = viewModelScope.launch(Dispatchers.IO) {
+        val response =
+            movieRepository.getRanking(date)
+        if (response.isSuccessful) {
+            response.body()?.let { body ->
+                _searchApiList.postValue(body)
+            }
+        } else {
+            Log.d(TAG, "searchRecipes: response.isNotSuccessful")
+            Log.d(TAG, response.message())
+        }
+    }
+
+    private val _apiToUrl = MutableLiveData<String>()
+    val apiToUrl : LiveData<String> = _apiToUrl
+
+    fun searchMovieWithNameToGetOne(name: String) = viewModelScope.launch(Dispatchers.IO) {
+        Log.d(TAG, "searchMovieWithNameToGetOne: start")
+        Log.d(TAG, "searchMovieWithNameToGetOne: $name")
+        try {
+            val jsoup = Jsoup.connect(String.format(BASE_URL + SEARCH_URL + name))
+            val doc: Document = jsoup.get()
+            val elements: Elements = doc
+                .select("ul.search_list_1")
+                .select("li")
+
+            val url = elements[0].select("p.result_thumb").select("a").select("img").attr("src")
+            _apiToUrl.postValue(url)
+        } catch (httpStatusException: HttpStatusException) {
+            Log.e(TAG, httpStatusException.message.toString())
+            httpStatusException.printStackTrace()
+        } catch (exception: Exception) {
+            Log.e(TAG, exception.message.toString())
+            exception.printStackTrace()
+        }
+        Log.d(TAG, "searchMovieWithNameToGetOne: End")
     }
 
     // room
