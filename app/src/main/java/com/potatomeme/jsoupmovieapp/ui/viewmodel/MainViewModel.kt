@@ -309,7 +309,7 @@ class MainViewModel(
                 .select("ul.search_list_1")
                 .select("li")
 
-            val url = elements[0].select("p.result_thumb").select("a").select("img").attr("src")
+            val url = elements[0].select("dt").select("a").attr("href")
             _apiToUrl.postValue(url)
         } catch (httpStatusException: HttpStatusException) {
             Log.e(TAG, httpStatusException.message.toString())

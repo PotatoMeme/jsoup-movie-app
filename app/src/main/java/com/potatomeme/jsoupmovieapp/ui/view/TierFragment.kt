@@ -91,7 +91,7 @@ class TierFragment : Fragment() {
     }
 
     private fun setupSpinner() {
-        val sort_list = listOf("API Ranking","실시간 조회순", "평정순(현재 상영영화)", "평점순(모든영화)")
+        val sort_list = listOf("API To Get Ranking","실시간 조회순", "평정순(현재 상영영화)", "평점순(모든영화)")
         val adapter_spinner =
             ArrayAdapter(context as MainActivity, R.layout.itme_dropdown, sort_list)
         binding.spinner.setAdapter(adapter_spinner)
@@ -130,7 +130,10 @@ class TierFragment : Fragment() {
 
             apiTierListAdapter.setOnItemClickListener( object :ApiTierListAdapter.OnItemClickListener{
                 override fun onItemClick(v: View, dailyBoxOffice: DailyBoxOffice, pos: Int) {
-                    Log.d(TAG, "onItemClick: $dailyBoxOffice")
+                    //Log.d(TAG, "onItemClick: $dailyBoxOffice")
+                    //viewModel.searchMovieWithNameToGetOne(dailyBoxOffice.movieNm)
+                    val action = TierFragmentDirections.actionFragmentTierToFragmentMovieApi(dailyBoxOffice.movieNm)
+                    findNavController().navigate(action)
                 }
             })
             adapter = apiTierListAdapter
