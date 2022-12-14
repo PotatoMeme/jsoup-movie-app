@@ -54,6 +54,10 @@ class MovieApiFragment : Fragment() {
             Glide.with(binding.movieImage.context)
                 .load(it.imgUrl)
                 .into(binding.movieImage)
+            saved_state = viewModel.savedMovies.value.any {  movie ->
+                movie.url == url
+            }
+            binding.movieSave.text = if (saved_state) "delete" else "save"
         }
 
 

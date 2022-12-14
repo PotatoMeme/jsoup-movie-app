@@ -63,7 +63,7 @@ class TierFragment : Fragment() {
         binding.btnDateSelect.setOnClickListener {
             val dlg = DateDialog(activity as MainActivity, binding.tvDate.text.toString())
             dlg.setOnOKClickedListener { dateStr ->
-                if (yesterDay.toInt() > dateStr.toInt()){
+                if (yesterDay.toInt() < dateStr.toInt()){
                     Toast.makeText(context as MainActivity,"오늘을 포함한 이후의 날짜로는 검색을 할수 없습니다",Toast.LENGTH_SHORT).show()
                     Toast.makeText(context as MainActivity,"검색 날짜를 $yesterDay 로 변경합니다.",Toast.LENGTH_SHORT).show()
                     binding.tvDate.text = yesterDay
